@@ -1,1 +1,36 @@
 # devops-end-to-end-ecommerce-java-app
+Using Docker to Run MySQL
+docker run --name mysql-local   -e MYSQL_ROOT_PASSWORD=rootpass   -e MYSQL_DATABASE=ecommerce   -p 3306:3306   -d mysql:8
+To connect to the database:
+
+docker exec -it mysql-local mysql -u root -p
+Password: rootpass
+
+SQL Commands:
+SHOW DATABASES;
+USE ecommerce;
+SHOW TABLES;
+MAVEN - BUILD TOOL JAVA PROJECT
+mvn clean install -DskipTests
+Execute the above command to build the JAR file.
+
+To run the JAR file locally:
+java -jar target/ecommerce-0.0.1-SNAPSHOT.jar
+To access the application: localhost:8080
+
+application.properties Configuration:
+spring.datasource.url=jdbc:mysql://localhost:3306/ecommerce
+spring.datasource.username=root
+spring.datasource.password=rootpass
+DOCKERFILE - APPLICATION
+FROM openjdk:21 -- image to build jar file for java application
+ARG JAR_FILE = target/*.jar -- Use a build-time variable to specify the JAR file
+COPY ${JAR_FILE} app.jar -- copy jar file rename the app.jar inside container
+ENTRYPOINT ["java", "-jar", "app.jar"] -- To run the jar file inside the container
+Build Docker image:
+
+docker build -t ecommerce .
+Run Docker container:
+
+docker run --name ecommerce-app2 -p 8080:8080   -e SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/ecommerce   -e SPRING_DATASOURCE_USERNAME=root   -e SPRING_DATASOURCE_PASSWORD=rootpass   -e SPRING_JPA_HIBERNATE_DDL_AUTO=update   -e SPRING_JPA_SHOW_SQL=true   -e SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL=true   mahesh5
+to connect inside container kubernets kubectl exec -it my-sql-9d7b97d9f-9dcmn — bash mysql -u root -p
